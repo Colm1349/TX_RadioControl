@@ -27,6 +27,7 @@
 //#include <LiquidCrystalRus.h>
 #include <LiquidCrystal.h>
 #include <Wire.h>
+
 #include <MBee.h>
 //DEFINE
 //Ports Rename
@@ -201,7 +202,7 @@ byte Roper[8] = {
 
 void Alarm_ON()
 {
-  DEBUG.println("Alarm ON");
+  DEBUG.println(F("Alarm ON"));
   digitalWrite(BUZZER_Pin, HIGH);
   AlarmFlag = true;
   // GOTO
@@ -212,7 +213,7 @@ void Alarm_ON()
 void Alarm_OFF()
 {
   // digitalWrite(BUZZER_Pin, HIGH);
-  DEBUG.println("Alarm OFF");
+  DEBUG.println(F("Alarm OFF"));
   digitalWrite(BUZZER_Pin, LOW);
   AlarmFlag = false;
   // GOTO
@@ -241,20 +242,20 @@ void simplePrint_LCD(int number, int pos1, int pos2)
 void LCD_print_int(int number, int pos1, int pos2)
 {
   number = random(0, 1023);
-  DEBUG.print("number do ");
+  DEBUG.print(F("number do "));
   DEBUG.println(number);
   number = map(number, 0 , 1023, -100, 100);
-  DEBUG.print("number posle ");
+  DEBUG.print(F("number posle "));
   DEBUG.println(number);
 
   int hundred = number / 100;
   int ten = number % 100 / 10;
   int one = number % 10;
-  DEBUG.print("hundred ");
+  DEBUG.print(F("hundred "));
   DEBUG.println(hundred);
-  DEBUG.print("ten ");
+  DEBUG.print(F("ten "));
   DEBUG.println(ten);
-  DEBUG.print("one ");
+  DEBUG.print(F("one "));
   DEBUG.println(one);
 
   // check - or +
@@ -405,23 +406,27 @@ void Fill_Command_Pack()
 //
 void Set_SWITCHER_PIN(bool WireFlag)
 {
-  DEBUG.print("WireFlag =>");
+  // update 14.05.2020
+  DEBUG.print(F("WireFlag =>"));
   DEBUG.println(WireFlag);
   if (WireFlag == true)
   {
-    digitalWrite(SWITCHER_PIN_plus_WireLed, LOW); // inverted COM(4) <-> NC (3) connect to Radio_Led
-    DEBUG.println("Radio_Led !HIGH");
-    digitalWrite(Radio_Led, HIGH);   // connect to Wire_Led but means WIRE connect
+    digitalWrite(SWITCHER_PIN_plus_WireLed, HIGH);
+    // digitalWrite(SWITCHER_PIN_plus_WireLed, LOW); // inverted COM(4) <-> NC (3) connect to Radio_Led
+    DEBUG.println(F("Radio_Led HIGH"));    // update 14.05.2020
+    // digitalWrite(Radio_Led, HIGH);   // connect to Wire_Led but means WIRE connect
+    digitalWrite(Radio_Led, HIGH);      // update 14.05.2020
     //    DEBUG.println("Radio_Led HIGH");
     delay(5);
     //    digitalWrite(Green_WireLess_Led, LOW); // does it exist?
   }
   if (WireFlag == false)
   {
-    digitalWrite(SWITCHER_PIN_plus_WireLed, HIGH); // inverted D3A/D6A COM(4) <-> NO (1)
-    DEBUG.println("Radio_Led !LOW");
+    digitalWrite(SWITCHER_PIN_plus_WireLed, LOW); // update 14.05.2020
+    // digitalWrite(SWITCHER_PIN_plus_WireLed, HIGH); // inverted D3A/D6A COM(4) <-> NO (1)
+    DEBUG.println(F("Radio_Led LOW"));               // update 14.05.2020
     delay(5);
-    digitalWrite(Radio_Led, LOW);
+    digitalWrite(Radio_Led, LOW);                 //update 14.05.2020
     //    digitalWrite(Green_WireLess_Led, HIGH); //  does it exist?
   }
   return;
@@ -454,10 +459,10 @@ void Refresh_WireConnectionFlag_TX()
 
 void Fill_Telemetry_Pack_From_RX(const uint8_t* buffer, size_t size)
 {
-  DEBUG.println("Fill the Telemetry_Pack");
+  DEBUG.println(F("Fill the Telemetry_Pack"));
   if (size == 13 )
   {
-    DEBUG.println("pack fill from WIRE RX");
+    DEBUG.println(F("pack fill from WIRE RX"));
     for (unsigned int i = 0 ; i < size ; i++)
     {
       Telemetry_Pack_From_RX[i] = buffer[i];
@@ -468,14 +473,14 @@ void Fill_Telemetry_Pack_From_RX(const uint8_t* buffer, size_t size)
 //
 void Print_Telemetry_Packet(uint8_t* buffer, size_t size)
 {
-  DEBUG.println("Telemtry message:");
+  DEBUG.println(F("Telemtry message:"));
   for (unsigned int i = 0 ; i < size ; i++)
   {
-    DEBUG.print("[");
+    DEBUG.print(F("["));
     DEBUG.print(i);
-    DEBUG.print("]=");
+    DEBUG.print(F("]="));
     DEBUG.print(buffer[i]);
-    DEBUG.print("; ");
+    DEBUG.print(F("; "));
   }
   //  delay(5);
   return;
@@ -536,27 +541,27 @@ void Calculate_Data_From_Telemetry_Pack()
 
 void Printing_Values_On_A_PC_Monitor()
 {
-  DEBUG.print("Speed_1=");
+  DEBUG.print(F("Speed_1="));
   DEBUG.print(Speed_1_RPM);
-  DEBUG.print("~Speed_2=");
+  DEBUG.print(F("~Speed_2="));
   DEBUG.print(Speed_2_RPM);
-  DEBUG.print("~I_1=");
+  DEBUG.print(F("~I_1="));
   DEBUG.print(I_1_A);  //I_1_A
-  DEBUG.print("~I_2=");
+  DEBUG.print(F("~I_2="));
   DEBUG.print(I_2_A);  //I_2_A
-  DEBUG.print("~V_Roper=");
+  DEBUG.print(F("~V_Roper="));
   DEBUG.print(Battery_Roper_Voltage);
-  DEBUG.print("~PWM_Value=");
+  DEBUG.print(F("~PWM_Value="));
   DEBUG.print(PWM_Value_Percent);
-  DEBUG.print("~Direction=");
+  DEBUG.print(F("~Direction="));
   DEBUG.print(Roper_Direction);
   // GO TO  //mb REWORK this V_Control_Panel !!!!
-  DEBUG.print("~Battery_RC_Voltage=");  // x.y volt  5.2 V
+  DEBUG.print(F("~Battery_RC_Voltage="));  // x.y volt  5.2 V
   DEBUG.print( Battery_RC_Voltage );
-  DEBUG.print("~RSSI=");
+  DEBUG.print(F("~RSSI="));
   DEBUG.print(rx.getRssi());
   // End Marker
-  DEBUG.println("~ #");
+  DEBUG.println(F("~ #"));
   DEBUG.println();
 
   delay(30);
@@ -621,7 +626,7 @@ void Print_Battery_LvL_for_OLED(int intoviy, int pos1, int pos2)
   if ( intoviy >= 0 && intoviy <= 110)
   {
     itoa (intoviy, source, 10);
-    DEBUG.print("itoa(src) |");
+    DEBUG.print(F("itoa(src) |"));
     DEBUG.println(source);
   }
   disp.print(source);
@@ -824,11 +829,11 @@ void Processing_Mbee_Telemetry_Packet()
 {
   // Print API ID
   //  DEBUG.println("TX Packet from Rx READED, NICE!");
-  DEBUG.print("API ID === ");
+  DEBUG.print(F("API ID === "));
   DEBUG.println( mbee.getResponse().getApiId() );
 
   // Print RSSI
-  DEBUG.print("RSSI -> ");
+  DEBUG.print(F("RSSI -> "));
   DEBUG.println(rx.getRssi());
 
   //    Debug_information_About_Rx_Packet(); // debug info
@@ -868,18 +873,18 @@ void Processing_Mbee_Telemetry_Packet()
       Calculate_Data_From_Telemetry_Pack();
       Printing_Values_On_A_PC_Monitor();
       ReadyToPrint_DataFromRX = true;
-      DEBUG.print("ReadyToPrint_DataFromRX ");
+      DEBUG.print(F("ReadyToPrint_DataFromRX "));
       DEBUG.println(ReadyToPrint_DataFromRX);
       delay(10);
     }
     else
     {
-      DEBUG.println("1 symbols from RX");
+      DEBUG.println(F("1 symbols from RX"));
     }
 
   }
   else
-    DEBUG.println("Unexpected API ID from RX");
+    DEBUG.println(F("Unexpected API ID from RX"));
 
   return;
 } 
@@ -889,7 +894,7 @@ void onPacketReceived(const uint8_t* buffer, size_t size)
 {
   if (WireConnectionFlag_TX == false)
   {
-    DEBUG.println("NOOOOOOO");
+    DEBUG.println(F("NOOOOOOO"));
     //    DEBUG.println("This packet is for Mbee. This is not my Job guys *going to relax*");
     return;
   }
@@ -915,7 +920,7 @@ void onPacketReceived(const uint8_t* buffer, size_t size)
 
 
   ReadyToPrint_DataFromRX = true;
-  DEBUG.print("ReadyToPrint_DataFromRX ");
+  DEBUG.print(F("ReadyToPrint_DataFromRX "));
   DEBUG.println(ReadyToPrint_DataFromRX);
   //
 
@@ -931,20 +936,20 @@ void Send_Command_Pack(bool CommunicationTypeWireFlag)
 {
   if (CommunicationTypeWireFlag == true)
   {
-    DEBUG.println("Wire send");  // GO TO Send
+    DEBUG.println(F("Wire send"));  // GO TO Send
     WireSerial.send(Command_Pack, sizeof(Command_Pack) / sizeof(Command_Pack[0]) ); // 3 or sizeof(Command_Pack) / sizeof(Command_Pack[0]) // GO TO Send actual size
     number_of_packet++;
   }
   else // CommunicationTypeWireFlag false
   {
-    DEBUG.println("WireLESS send");
+    DEBUG.println(F("WireLESS send"));
     tx.setRemoteAddress(remoteAddress);
     tx.setPayload((uint8_t*)Command_Pack);      //Устанавливаем указатель на тестовый массив
     tx.setPayloadLength(sizeof(Command_Pack));  //Устанавливаем длину поля данных
     mbee.send(tx);
     number_of_packet++;
   }
-  DEBUG.print("number_of_packet -> ");
+  DEBUG.print(F("number_of_packet -> "));
   DEBUG.println(number_of_packet);
   //RESET counter
   if (number_of_packet >= 256)
@@ -980,7 +985,7 @@ void Check_Recieve_Buffer( bool WireFlag)
     mbee.readPacket(); //Постоянно проверяем наличие данных от модема.
     if (mbee.getResponse().isAvailable())
     {
-      DEBUG.println("mbee packet is readable");
+      DEBUG.println(F("mbee packet is readable"));
       Processing_Mbee_Telemetry_Packet();
       DEBUG.println("YEAH!");
     }
@@ -992,7 +997,7 @@ void Check_Recieve_Buffer( bool WireFlag)
       delay(500);
     }
     else
-      DEBUG.println("No receive=(");
+      DEBUG.println(F("No receive=("));
     DEBUG.println();
   }
   return;
@@ -1032,7 +1037,7 @@ void setup() {
   while (!Serial);
   WireSerial.begin(115200);
   mbee.begin(MBee_Serial);
-  DEBUG.println("Go");
+  DEBUG.println(F("Go"));
   Refresh_WireConnectionFlag_TX();
   //DEBUG Starter handler
   WireSerial.setPacketHandler(&onPacketReceived);
@@ -1053,7 +1058,7 @@ void setup() {
 
 // Start LOOP function
 void loop() {
-  DEBUG.println("TX");
+  DEBUG.println(F("TX"));
 
   // test for real plate
   //  DEBUG.println("All LOW");
@@ -1102,7 +1107,7 @@ void loop() {
   // Display data from Telemetry
   if (ReadyToPrint_DataFromRX == true)
   {
-    DEBUG.print("LCD_Print ");
+    DEBUG.print(F("LCD_Print "));
     DEBUG.println(ReadyToPrint_DataFromRX);
     //    OLED_Display_Dynamic_Data();
     ReadyToPrint_DataFromRX = false;
