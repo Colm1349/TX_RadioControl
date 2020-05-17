@@ -33,7 +33,7 @@
 //Ports Rename
 #define DEBUG nss
 //#define DEBUG altSerial  // nss or altSerial
-#define MBee_Serial Serial
+#define MBee_Serial Serial1
 //Const
 #define Stop 0
 #define Forward 5
@@ -1033,7 +1033,7 @@ void setup() {
 
   //Ports setup
   DEBUG.begin(115200);
-  MBee_Serial.begin(115200);
+  MBee_Serial.begin(115200);  // 115200
   while (!Serial);
   WireSerial.begin(115200);
   mbee.begin(MBee_Serial);
