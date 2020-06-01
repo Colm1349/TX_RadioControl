@@ -33,7 +33,7 @@
 //Ports Rename
 #define DEBUG nss
 //#define DEBUG altSerial  // nss or altSerial
-#define MBee_Serial Serial1
+#define MBee_Serial Serial
 //Const
 #define Stop 0
 #define Forward 5
@@ -226,6 +226,7 @@ void Wire_Symbol_plot()
   //GOTO maybe plot special symbols? like "-==-"
   disp.setCursor(16, 0);
   disp.print("WIRE");
+  DEBUG.println("WIRE word PRINTED");
   return;
 }
 
@@ -659,6 +660,8 @@ uint8_t RSSI_Processing()
 // Plot
 void RSSI_plot(uint8_t LvL)
 {
+  DEBUG.println("RSSI plot!");
+
   if (LvL == 1 )
   {
     disp.setCursor(16, 0);
@@ -748,9 +751,6 @@ void OLED_Display_Dynamic_Data()
   //  DEBUG.print("TX_Telemetry_Pack_From_RX[0]= ");
   //  DEBUG.println(Telemetry_Pack_From_RX[0]);
 
-  //  disp.setCursor(2, 0);
-  //  disp.print(RSSI_LvL);
-
   //  buffer1 = Compiler_for_OLED(RSSI_LvL); // 5
   //  DEBUG.println("Buffer: ");
   //  DEBUG.println(buffer1[0]);
@@ -770,6 +770,15 @@ void OLED_Display_Dynamic_Data()
   //  Print_to_OLED(random(-100, 100), 5, 2); // 5
   //  Print_to_OLED(random(-100, 100), 12, 2);
   //
+  // Print_Battery_LvL_for_OLED(random(0, 100), 6, 3);
+  // Print_Battery_LvL_for_OLED(random(0, 100), 13, 3);
+  // Print_Battery_LvL_for_OLED(V_Roper_raw, 6, 3);    // 9
+  // Print_Battery_LvL_for_OLED(V_RC_raw, 13, 3);      // self
+
+  //DEBUG on First line
+   disp.setCursor(2, 0);
+   disp.print(RSSI_LvL);
+
   Print_Battery_LvL_for_OLED(random(0, 100), 6, 3);
   Print_Battery_LvL_for_OLED(random(0, 100), 13, 3);
   //  Print_Battery_LvL_for_OLED(V_Roper_raw, 6, 3);    // 9
@@ -782,8 +791,7 @@ void OLED_Display_Dynamic_Data()
   else {
     Wire_Symbol_plot();
   }
-
-  //  // DEBUG
+    //  // DEBUG
   //  buffer1 = Compiler_for_OLED (Speed_1_raw);  // 1
   //  //  buffer2 = Compiler_for_OLED (Speed_2_raw);  // 3
   //  buffer2 = Compiler_for_OLED (Telemetry_Pack_From_RX[0]);
@@ -811,7 +819,7 @@ void OLED_Display_Dynamic_Data()
   //  disp.setCursor(6, 3);
   //  disp.print(buffer1);
   //  disp.setCursor(13, 3);
-  //  disp.print(buffer2);
+  //  disp.print(buffer2);  
   //  RSSI_LvL_for_Display = RSSI_Processing();
   //  if (WireConnectionFlag_TX == false)
   //    RSSI_plot(RSSI_LvL_for_Display);
@@ -1085,9 +1093,8 @@ void loop() {
   bool F = digitalRead(Forward_Check_Pin);
   bool B = digitalRead(Backward_Check_Pin);
 
-  //Read command (and maybe error situation)  //kost
+  //Read command (and maybe error situation) 
   CommandForRaper = ReadCommandFromSwitcher(F, B);
-  //  CommandForRaper = Forward;
 
   //Fill the Command_Pack
   Fill_Command_Pack();
@@ -1109,7 +1116,7 @@ void loop() {
   {
     DEBUG.print(F("LCD_Print "));
     DEBUG.println(ReadyToPrint_DataFromRX);
-    //    OLED_Display_Dynamic_Data();
+    // OLED_Display_Dynamic_Data();
     ReadyToPrint_DataFromRX = false;
   }
   //
@@ -1141,6 +1148,7 @@ void loop() {
 //  DEBUG.print("number posle ");
 //  DEBUG.println(number);
 
+// work!
   static int i = 0;
   i++;
   if (i >= 2)
@@ -1151,6 +1159,8 @@ void loop() {
     simplePrint_LCD(map(I_1_raw, 50, 995, -100, 100), 5, 2);
     simplePrint_LCD((-1)*map(I_2_raw, 50, 995, -100, 100), 12, 2);
   }
+
+
 
   //  simplePrint_LCD(random(-100, 100), 12, 1);
   //  simplePrint_LCD(random(-100, 100), 5, 2);
